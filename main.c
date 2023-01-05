@@ -71,7 +71,7 @@ struct poste_peage *postes_peage;
 int montants_classe[5] = {20, 30, 40, 50, 10};
 
 // Temps d'attente en secondes pour chaque classe de véhicule (voitures, motos, deux-essieux, trois-essieux)
-const int TEMPS_ATTENTE[5] = {3, 5, 10, 15, 2};
+const int TEMPS_ATTENTE[5] = {13, 15, 20, 25, 12};
 
 // Variables globales pour tout le programme.
 // Elles sont initialisées modifiées en fonction des arguments passés au programme
@@ -238,7 +238,18 @@ void* simulate_vehicule(void* arg) {
             sleep(1);
             nb_telepeage++;
         } else {
-            sleep(TEMPS_ATTENTE[v->classe]);
+            if (voie_covoiturage == 1) {
+                if (v->nb_occupant > 1) {
+                    sleep(2);
+                    nb_covoiturage++;
+                } else {
+                    sleep(TEMPS_ATTENTE[v->classe]);
+                    nb_sans_covoiturage++;
+                }
+            } else {
+                sleep(TEMPS_ATTENTE[v->classe]);
+                nb_sans_covoiturage++;
+            }
             nb_sans_telepeage++;
         }
     } else {
