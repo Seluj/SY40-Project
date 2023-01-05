@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <time.h>
 
 #define ANSI_COLOR_RED     "\x1b[31m"
 #define ANSI_COLOR_GREEN   "\x1b[32m"
@@ -363,6 +364,8 @@ int main(int argc, char* argv[]) {
     printf("\n\n ========================== Debut du programme (dans 2 sec) ========================== \n\n");
     sleep(2);
 
+    clock_t start = clock();
+
     // Initialiser les postes de péage
     postes_peage = malloc(nb_postes_peage * sizeof(struct poste_peage));
     for (int i = 0; i < nb_postes_peage; i++) {
@@ -382,6 +385,9 @@ int main(int argc, char* argv[]) {
         pthread_join(threads[i], NULL);
     }
 
+    clock_t end = clock();
+
+    double time_spent = (double)(end - start) / CLOCKS_PER_SEC;
 
     printf("\n\n ========================== Fin du programme ========================== \n\n");
     // Afficher le total de taxes collectées par chaque poste de péage
@@ -403,6 +409,8 @@ int main(int argc, char* argv[]) {
         printf("Nombre de v%chicules ayant utilise la voie de covoiturage: %d\n", 130, nb_covoiturage);
         printf("Nombre de v%chicules n'ayant pas utilise la voie de covoiturage: %d\n", 130, nb_sans_covoiturage);
     }
+
+    printf("Temps d'ex%ccution: %.2f secondes\n", 130, time_spent);
 
     // Libérer la mémoire
     for (int i = 0; i < nb_postes_peage; ++i) {
