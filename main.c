@@ -376,7 +376,7 @@ int main(int argc, char* argv[]) {
            "\t- Voie de t%cl%cp%cage = %d\n"
            "\t- Voie de covoiturage = %d\n"
            "\t- Temps entre les v%chicules (en second) = %.3f\n",
-           136,
+           138,
            130, nb_vehicules,
            130, nb_postes_peage,
            130, 130, 130, voie_telepeage,
