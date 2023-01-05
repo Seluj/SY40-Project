@@ -181,6 +181,23 @@ int poste_peage_minimum(int correction) {
     return poste_peage_id;
 }
 
+// Fonction pour afficher l'entrée ou la sortie d'un véhicule
+void affichage(struct vehicule v, int poste_peage_id, int sortie) {
+    if (sortie == 0) {
+        printf(ANSI_COLOR_GREEN"V%chicule entrant %d"ANSI_COLOR_RESET": classe %s, ",
+               130, v.id, classes_vehicule_str[v.classe]);
+        if (v.mode_paiement == TELEPEAGE) {
+            printf(ANSI_COLOR_YELLOW"mode de paiement %s"ANSI_COLOR_RESET, mode_paiement_str[v.mode_paiement]);
+        } else {
+            printf(ANSI_COLOR_BLUE"mode de paiement %s"ANSI_COLOR_RESET, mode_paiement_str[v.mode_paiement]);
+        }
+        printf(", poste de p%cage %d, nombre d'occupants %d\n", 130, poste_peage_id, v.nb_occupant);
+    } else {
+        printf(ANSI_COLOR_RED"V%chicule sortant %d"ANSI_COLOR_RESET": classe %s, poste de p%cage %d\n",
+               130, v.id, classes_vehicule_str[v.classe], 130, poste_peage_id);
+    }
+}
+
 // Fonction pour simuler le passage d'un véhicule au péage
 void* simulate_vehicule(void* arg) {
     // Récupérer les informations du véhicule
@@ -209,7 +226,7 @@ void* simulate_vehicule(void* arg) {
     }
 
     // Ajouter le véhicule à la file d'attente du poste de péage
-    printf(ANSI_COLOR_RED"Vehicule entrant %d: classe %s, mode de paiement %s, poste de peage %d, nombre d'occupants %d\n"ANSI_COLOR_RESET, v->id, classes_vehicule_str[v->classe], mode_paiement_str[v->mode_paiement], poste_peage_id, v->nb_occupant);
+    affichage(*v, poste_peage_id, 0);
     ajout_queue(&postes_peage[poste_peage_id], *v);
 
     // Attendre au poste de péage
@@ -230,7 +247,7 @@ void* simulate_vehicule(void* arg) {
 
     // Passer au péage
     struct vehicule vehicule_passe = supp_queue(&postes_peage[poste_peage_id]);
-    printf(ANSI_COLOR_YELLOW"Vehicule sortant %d: classe %s, mode de paiement %s, poste de peage %d\n"ANSI_COLOR_RESET, vehicule_passe.id, classes_vehicule_str[vehicule_passe.classe], mode_paiement_str[vehicule_passe.mode_paiement], poste_peage_id);
+    affichage(vehicule_passe, poste_peage_id, 1);
 
     // Calcule du montant à payer
     int total_paye = montants_classe[vehicule_passe.classe];
