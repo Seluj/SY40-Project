@@ -223,7 +223,17 @@ void* simulate_vehicule(void* arg) {
             }
         }
     } else {
-        poste_peage_id = poste_peage_minimum(1);
+        if (voie_covoiturage == 1) {
+            if (v->nb_occupant > 1) {
+                poste_peage_id = nb_postes_peage - 1;
+                nb_covoiturage++;
+            } else {
+                poste_peage_id = poste_peage_minimum(1);
+                nb_sans_covoiturage++;
+            }
+        } else {
+            poste_peage_id = poste_peage_minimum(0);
+        }
     }
 
     // Ajouter le véhicule à la file d'attente du poste de péage
